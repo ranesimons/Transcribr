@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Transcribr Chat Server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "dev": "nodemon server"
+  },
+  "author": "Rane Simons",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "ig": "^0.0.5",
+    "moment": "^2.29.1",
+    "npm": "^7.22.0",
+    "socket.io": "^4.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
