@@ -33,11 +33,18 @@ class SocketParser {
     }
 }
 
+protocol ChatManagerDelegate {
+    func didReceiveMessage(message: String)
+}
+
 class SocketChatManager {
     
+    var delegate: ChatManagerDelegate?
+    
     // properties
-    let manager = SocketManager(socketURL: URL(string: "ws://localhost:3000")!, config: [.log(true), .compress])
+    let manager = SocketManager(socketURL: URL(string: "ws://localhost:3000")!, config: [.log(false), .compress])
     var socket: SocketIOClient? = nil
+//    var originalView:ViewController
     
     // lives
     
@@ -79,23 +86,73 @@ class SocketChatManager {
 //        }
         
         socket?.on("new message") { (data, ack) in
+            print("?????????????????????")
+            print(data)
+            print(data.first)
+            print("?????????????????????")
             guard let dataInfo = data.first else { return }
-            if let response: SocketMessage = try? SocketParser.convert(data: dataInfo) {
-//                print("Message from '\(response.username)': \(response.message)")
-                print("\(response.message)")
+            print("?????????????????????")
+            print(dataInfo)
+            print(dataInfo)
+//            let jsonData = try JSONSerialization.data(withJSONObject: dict)
+//            let decoder = JSONDecoder()
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: dataInfo)
+                print("?????????????????????")
+                print(jsonData)
+                print("?????????????????????")
+                let decoder = JSONDecoder()
+                print("*********************")
+                let result = try decoder.decode(Dictionary<String, String>.self, from: jsonData)
+                print("?????????????????????")
+                print(result)
+                print("?????????????????????")
+                print("?????????????????????")
+                let unwrapd = result.first
+                print(unwrapd)
+                print("?????????????????????")
+                let theActualMessage:String = unwrapd!.value
+                print(theActualMessage)
+                print("?????????????????????")
+                print(self.delegate)
+                print("?????????????????????")
+                self.delegate?.didReceiveMessage(message: theActualMessage)
+            } catch {
+                print("naw: \(error)")
             }
             
+//            let decoder = JSONDecoder()
+//            let result = try decoder.decode(nil, from: jsonData)
+//            print(result)
+//            print("?????????????????????")
+//            if let response: SocketMessage = try? SocketParser.convert(data: dataInfo) {
+//                print("Message from '\(response.username)': \(response.message)")
+//                print("\(response.message)")
+//                prototypeChatMessages.reloadData()
+//                print("?????????????????????")
+//                self.delegating.didUpdate(sender: self)
+//                print("?????????????????????")
+//            }
         }
     }
 
     func send(message: String) {
-        socket?.emit("new message", message)
+        print("###########################")
+        try socket?.emit("new message", message) {
+            print("uhh")
+        }
+//        catch {
+//            print("hmm")
+//        }
+        print("###########################")
     }
 
 }
 
-class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDelegate, UITableViewDataSource, ChatManagerDelegate {
 
+//    let chats = Socket
+    
     var numberOfMessages:Int = 0
     var words:[String] = []
     var recordingSession:AVAudioSession!
@@ -139,6 +196,21 @@ class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDele
 //            seeAudioRecordings.reloadData()
             recordAudioLabel.setTitle("Speak", for: .normal)
         }
+    }
+
+    func didReceiveMessage(message: String) {
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+//        DispatchQueue.main.async {
+//            self.words.append(message)
+//            self.prototypeChatMessages.reloadData()
+//        }
+
+        numberOfMessages += 1
+        words.append(message)
+        print(words)
+        prototypeChatMessages.reloadData()
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
     }
     
     func deleteAudioFiles()
@@ -191,8 +263,9 @@ class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDele
         }
         
         chats = SocketChatManager()
-        
+        chats.delegate = self
         requestTranscribePermissions()
+
     }
     
     // Find the audio storage location

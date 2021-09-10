@@ -12,7 +12,7 @@ const io = socketio(server);
 
 // Run when a client connects
 io.on('connection', socket => {
-    socket.emit('message', 'Welcome To Transcribr');
+    // socket.emit('message', 'Welcome To Transcribr');
     console.log('Welcome To Transcribr');
     // Broadcast when a user connects
     // socket.broadcast.emit('message', 'User has joined the chat');
@@ -25,7 +25,12 @@ io.on('connection', socket => {
 
     // Runs when a user sends a message
     socket.on('new message', (msg) => {
-        io.emit('message', msg);
+        // io.emit('message', msg);
+        // io.emit('new message', msg);
+        // socket.emit('new message', msg)
+        socket.broadcast.emit('new message', {
+            message: msg
+        })
         console.log(msg);
     });
 });
