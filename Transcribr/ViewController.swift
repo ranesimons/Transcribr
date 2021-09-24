@@ -66,7 +66,7 @@ class SocketChatManager {
     
     func setupSocketEvents() {
         socket?.on(clientEvent: .connect) {data, ack in
-            print("Connected")
+//            print("Connected")
         }
 
 //        socket?.on("login") { (data, ack) in
@@ -86,72 +86,57 @@ class SocketChatManager {
 //        }
         
         socket?.on("new message") { (data, ack) in
-            print("?????????????????????")
-            print(data)
-            print(data.first)
-            print("?????????????????????")
+//            print("?????????????????????")
+//            print(data)
+//            print(data.first)
+//            print("?????????????????????")
             guard let dataInfo = data.first else { return }
-            print("?????????????????????")
-            print(dataInfo)
-            print(dataInfo)
+//            print("?????????????????????")
+//            print(dataInfo)
+//            print(dataInfo)
 //            let jsonData = try JSONSerialization.data(withJSONObject: dict)
 //            let decoder = JSONDecoder()
             do {
                 let jsonData = try JSONSerialization.data(withJSONObject: dataInfo)
-                print("?????????????????????")
-                print(jsonData)
-                print("?????????????????????")
+//                print("?????????????????????")
+//                print(jsonData)
+//                print("?????????????????????")
                 let decoder = JSONDecoder()
-                print("*********************")
+//                print("*********************")
                 let result = try decoder.decode(Dictionary<String, String>.self, from: jsonData)
-                print("?????????????????????")
-                print(result)
-                print("?????????????????????")
-                print("?????????????????????")
+//                print("?????????????????????")
+//                print(result)
+//                print("?????????????????????")
+//                print("?????????????????????")
                 let unwrapd = result.first
-                print(unwrapd)
-                print("?????????????????????")
+//                print(unwrapd)
+//                print("?????????????????????")
                 let theActualMessage:String = unwrapd!.value
-                print(theActualMessage)
-                print("?????????????????????")
-                print(self.delegate)
-                print("?????????????????????")
+//                print(theActualMessage)
+//                print("?????????????????????")
+//                print(self.delegate)
+//                print("?????????????????????")
                 self.delegate?.didReceiveMessage(message: theActualMessage)
             } catch {
-                print("naw: \(error)")
+//                print("naw: \(error)")
             }
-            
-//            let decoder = JSONDecoder()
-//            let result = try decoder.decode(nil, from: jsonData)
-//            print(result)
-//            print("?????????????????????")
-//            if let response: SocketMessage = try? SocketParser.convert(data: dataInfo) {
-//                print("Message from '\(response.username)': \(response.message)")
-//                print("\(response.message)")
-//                prototypeChatMessages.reloadData()
-//                print("?????????????????????")
-//                self.delegating.didUpdate(sender: self)
-//                print("?????????????????????")
-//            }
         }
     }
 
     func send(message: String) {
-        print("###########################")
+//        print("###########################")
         try socket?.emit("new message", message) {
-            print("uhh")
+//            print("uhh")
         }
 //        catch {
 //            print("hmm")
 //        }
-        print("###########################")
+//        print("###########################")
     }
 
 }
 
 class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDelegate, UITableViewDataSource, ChatManagerDelegate {
-
-//    let chats = Socket
     
     var numberOfMessages:Int = 0
     var words:[String] = []
@@ -199,17 +184,12 @@ class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDele
     }
 
     func didReceiveMessage(message: String) {
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-//        DispatchQueue.main.async {
-//            self.words.append(message)
-//            self.prototypeChatMessages.reloadData()
-//        }
-
+//        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         numberOfMessages += 1
         words.append(message)
-        print(words)
+//        print(words)
         prototypeChatMessages.reloadData()
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+//        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
     }
     
@@ -221,8 +201,8 @@ class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDele
             let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
                                                                        includingPropertiesForKeys: nil,
                                                                        options: .skipsHiddenFiles)
-            print(fileURLs)
-            print("wat")
+//            print(fileURLs)
+//            print("wat")
             for fileURL in fileURLs {
                 if fileURL.pathExtension == "m4a" {
                     try FileManager.default.removeItem(at: fileURL)
@@ -235,9 +215,9 @@ class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDele
         SFSpeechRecognizer.requestAuthorization { [unowned self] authStatus in
             DispatchQueue.main.async {
                 if authStatus == .authorized {
-                    print("Good to go!")
+//                    print("Good to go!")
                 } else {
-                    print("Transcription permission was declined.")
+//                    print("Transcription permission was declined.")
                 }
             }
         }
@@ -258,7 +238,7 @@ class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDele
         
         AVAudioSession.sharedInstance().requestRecordPermission { (hasPermission) in if hasPermission
             {
-                print ("ACCEPTED")
+//                print ("ACCEPTED")
             }
         }
         
@@ -273,7 +253,7 @@ class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDele
     {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let DDirectory = paths[0]
-        print(DDirectory)
+//        print(DDirectory)
         return DDirectory
     }
     
@@ -296,38 +276,17 @@ class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDele
         return proto
     }
     
-//    func tableView(_ tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeReusableCellWithIdentifier("idCellChat", forIndexPath: indexPath) as! ChatCell
-//        let currentChatMessage = chatMessages[indexPath.row]
-//        let senderNickname = currentChatMessage["nickname"] as! String
-//        let message = currentChatMessage["message"] as! String
-//        let messageDate = currentChatMessage["date"] as! String
-        
-//        if senderNickname == nickname {
-//            cell.lblChatMessage.textAlignment = NSTextAlignment.Right
-//            cell.lblMessageDetails.textAlignment = NSTextAlignment.Right
-//            cell.lblChatMessage.textColor = lblNewsBanner.backgroundColor
-//        }
-        
-//        cell.lblChatMessage.text = message
-//        cell.lblMessageDetails.text = "by \(senderNickname.uppercaseString) @ \(messageDate)"
-//        cell.lblChatMessage.textColor = UIColor.darkGrayColor()
-        
-//        return cell
-//    }
-    
     func transcribeAudio(url: URL) {
         // create a new recognizer and point it at our audio
-        print("lol")
         let recognizer = SFSpeechRecognizer()
         let request = SFSpeechURLRecognitionRequest(url: url)
-        print("yea")
+//        print("yea")
 
         // start recognition!
         recognizer?.recognitionTask(with: request) { [unowned self] (result, error) in
             // abort if we didn't get any transcription back
             guard let result = result else {
-                print("There was an error: \(error!)")
+//                print("There was an error: \(error!)")
                 return
             }
 
@@ -335,33 +294,17 @@ class ViewController: UIViewController, AVAudioRecorderDelegate, UITableViewDele
             if result.isFinal {
                 // pull out the best transcription...
                 let transcribing = result.bestTranscription.formattedString
-                print(transcribing)
+//                print(transcribing)
                 chats.send(message: transcribing)
                 numberOfMessages += 1
                 words.append(transcribing)
-                print(words)
+//                print(words)
                 prototypeChatMessages.reloadData()
 //                print(result.bestTranscription.formattedString)
                 deleteAudioFiles()
             }
         }
     }
-
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//      let sound = getFileDirectory().appendingPathComponent("\(indexPath.row + 1).m4a")
-//      let sound = getFileDirectory().appendingPathComponent("\(indexPath.row + 1).mp4a")
-//        
-//        do
-//        {
-//            audioPlayer = try AVAudioPlayer(contentsOf: sound)
-//            audioPlayer.play()
-//            transcribeAudio(url: sound)
-//        }
-//        catch
-//        {
-//            print(error.localizedDescription)
-//        }
-//    }
     
 }
 
